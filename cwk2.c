@@ -65,9 +65,9 @@ int main( int argc, char *argv[] )
 
 	printf("Process %d of %d \n", rank, numprocs);
 
-	MPI_Scatter( A, rowsPerProc, MPI_INT, A_perProc, rowsPerProc, MPI_INT, 0, MPI_Comm_rank );
-	MPI_Scatter( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_Comm_rank );
-	MPI_Bcast( &x, 1, MPI_INT, 0, MPI_Comm_rank );
+	MPI_Scatter( A, rowsPerProc, MPI_INT, A_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
+	MPI_Scatter( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
+	MPI_Bcast( &x, 1, MPI_INT, 0, MPI_COMM_WORLD );
 
 	int row, col;
 	for (row=0; row<rowsPerProc; row++ )
@@ -77,7 +77,7 @@ int main( int argc, char *argv[] )
 			b[row] += A[row*rowsPerProc+col] * x[col];
 	}
 
-	MPI_Gather( &b_perProc, rowsPerProc, MPI_Int, b, rowsPerProc. MPI_Int, 0, MPI_Comm_rank );
+	MPI_Gather( &b_perProc, rowsPerProc, MPI_Int, b, rowsPerProc. MPI_Int, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
