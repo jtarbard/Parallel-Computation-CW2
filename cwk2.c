@@ -64,24 +64,13 @@ int main( int argc, char *argv[] )
 	//
 	
 	// Send x to all processes
-	MPI_Bcast(
-		&x, N, MPI_INT,
-		0, MPI_COMM_WORLD
-	);
+	MPI_Bcast( &x, N, MPI_INT, 0, MPI_COMM_WORLD );
 	
 	// Send parititon of a to all processes 
-	MPI_Scatter(
-		A, rowsPerProc, MPI_INT,
-		A_perProc, rowsPerProc, MPI_INT,
-		0, MPI_COMM_WORLD
-	);
+	MPI_Scatter(A, rowsPerProc, MPI_INT, A_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD	);
 
 	// Send parititon of b to all processes 
-	MPI_Scatter(
-		b, rowsPerProc, MPI_INT,
-		b_perProc, rowsPerProc, MPI_INT,
-		0, MPI_COMM_WORLD
-	);
+	MPI_Scatter( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
 
 
 	// Perform matrix vector multiplication
@@ -94,11 +83,10 @@ int main( int argc, char *argv[] )
 	}
 
 	// Gather results from processes to b
-	MPI_Gather(
-		b, rowsPerProc, MPI_INT,
-		b_perProc, rowsPerProc, MPI_INT,
-		0, MPI_COMM_WORLD
-	);
+	MPI_Gather( a, rowsPerProc, MPI_INT, A_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
+
+	// Gather results from processes to b
+	MPI_Gather( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
