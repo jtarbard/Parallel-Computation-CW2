@@ -93,6 +93,12 @@ int main( int argc, char *argv[] )
 			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
 	}
 
+	// Gather results from processes to b
+	MPI_Gather(
+		b, rowsPerProc, MPI_INT,
+		b_perProc, rowsPerProc, MPI_INT,
+		0, MPI_COMM_WORLD
+	);
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
