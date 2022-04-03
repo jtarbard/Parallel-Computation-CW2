@@ -75,18 +75,15 @@ int main( int argc, char *argv[] )
 
 	// Perform matrix vector multiplication
 	int row, col;
-	for( row=0; row<rowsPerProc; row++ ) 
+	for (row=0; row<rowsPerProc; row++ )
 	{
-		b_perProc[row] = 0.0f;
-		for( col=0; col<rowsPerProc; col++ )
-			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
+		b[row] = 0.0f;
+		for( col=0; col<N; col++ )
+			b[row] += A[row*N+col] * x[col];
 	}
 
 	// Gather results from processes to b
-	MPI_Gather( a, rowsPerProc, MPI_INT, A_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
-
-	// Gather results from processes to b
-	MPI_Gather( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
+	MPI_Gather( b_perProc, rowsPerProc, MPI_INT, b, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
@@ -99,11 +96,6 @@ int main( int argc, char *argv[] )
 		// Call the check routine "checkAgainstSerial()" in cwk2_extra.h, which prints messages explaining if the parallel calculation
 		// matches the serial one, to within floating-point precision.
 		checkAgainstSerial(A,x,b,N);					// Do NOT modify this call or the function in cwk2_extra.h 
-		
-		for( int i=0; i<N; i++)
-		{
-			printf("%f", b[i]);
-		}
 	}
 
 	//
