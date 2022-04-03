@@ -62,6 +62,14 @@ int main( int argc, char *argv[] )
 	//
 	// Perform matrix-vector multiplication in parallel.
 	//
+	// Serial
+	int row, col;
+	for( row=0; row<N; row++ ) 
+	{
+		b[row] = 0.0f;
+		for( col=0; col<N; col++ )
+			b[row] += A[row*N+col] * x[col];
+	}
 
 	// Your solution should go here.
 
