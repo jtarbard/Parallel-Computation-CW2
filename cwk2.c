@@ -99,6 +99,11 @@ int main( int argc, char *argv[] )
 		// Call the check routine "checkAgainstSerial()" in cwk2_extra.h, which prints messages explaining if the parallel calculation
 		// matches the serial one, to within floating-point precision.
 		checkAgainstSerial(A,x,b,N);					// Do NOT modify this call or the function in cwk2_extra.h 
+		
+		for( int i=0; i<N; i++)
+		{
+			printf("%f", b[i]);
+		}
 	}
 
 	//
