@@ -77,7 +77,7 @@ int main( int argc, char *argv[] )
 			b[row] += A[row*rowsPerProc+col] * x[col];
 	}
 
-	MPI_Gather( &b_perProc, rowsPerProc, MPI_Int, b, rowsPerProc. MPI_Int, 0, MPI_COMM_WORLD );
+	MPI_Gather( &b_perProc, rowsPerProc, MPI_INT, b, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
