@@ -65,7 +65,7 @@ int main( int argc, char *argv[] )
 	
 	// Send x to all processes
 	MPI_Bcast(
-		x, N, MPI_INT,
+		&x, N, MPI_INT,
 		0, MPI_COMM_WORLD
 	);
 	
@@ -83,7 +83,8 @@ int main( int argc, char *argv[] )
 		0, MPI_COMM_WORLD
 	);
 
-	// perform calculation
+
+	// Perform matrix vector multiplication
 	int row, col;
 	for( row=0; row<rowsPerProc; row++ ) 
 	{
@@ -91,29 +92,6 @@ int main( int argc, char *argv[] )
 		for( col=0; col<rowsPerProc; col++ )
 			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
 	}
-	
-	// recieve x to get processes answer
-	MPI_Gather(
-		&count, 1, MPI_INT,
-		partials, 1, MPI_INT,
-		0, MPI_COMM_WORLD
-	)
-
-	// combine b and b to get answer
-	MPI_Gather(
-		&count, 1, MPI_INT,
-		partials, 1, MPI_INT,
-		0, MPI_COMM_WORLD
-	)
-
-	// combine a
-	MPI_Gather(
-		&count, 1, MPI_INT,
-		partials, 1, MPI_INT,
-		0, MPI_COMM_WORLD
-	) 
-	// Perform matrix vector multiplication
-
 
 
 	//
