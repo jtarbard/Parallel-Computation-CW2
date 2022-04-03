@@ -72,6 +72,7 @@ int main( int argc, char *argv[] )
 	// Send parititon of b to all processes 
 	MPI_Scatter( b, rowsPerProc, MPI_INT, b_perProc, rowsPerProc, MPI_INT, 0, MPI_COMM_WORLD );
 
+	printf("Process %d has data A:%f. x:%f", rank, A[3], x[3]);
 
 	// Perform matrix vector multiplication
 	int row, col;
