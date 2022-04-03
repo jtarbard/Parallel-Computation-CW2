@@ -62,16 +62,59 @@ int main( int argc, char *argv[] )
 	//
 	// Perform matrix-vector multiplication in parallel.
 	//
-	// Serial
-	int row, col;
-	for( row=0; row<N; row++ ) 
-	{
-		b[row] = 0.0f;
-		for( col=0; col<N; col++ )
-			b[row] += A[row*N+col] * x[col];
-	}
+	
+	// Send x to all processes
+	MPI_Bcast(
+		x, N, MPI_INT,
+		0, MPI_COMM_WORLD
+	);
+	
+	// Send parititon of a to all processes 
+	MPI_Scatter(
+		A, rowsPerProc, MPI_INT,
+		A_perProc, rowsPerProc, MPI_INT,
+		0, MPI_COMM_WORLD
+	);
 
-	// Your solution should go here.
+	// Send parititon of b to all processes 
+	MPI_Scatter(
+		b, rowsPerProc, MPI_INT,
+		b_perProc, rowsPerProc, MPI_INT,
+		0, MPI_COMM_WORLD
+	);
+
+	// perform calculation
+	int row, col;
+	for( row=0; row<rowsPerProc; row++ ) 
+	{
+		b_perProc[row] = 0.0f;
+		for( col=0; col<rowsPerProc; col++ )
+			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
+	}
+	
+	// recieve x to get processes answer
+	MPI_Gather(
+		&count, 1, MPI_INT,
+		partials, 1, MPI_INT,
+		0, MPI_COMM_WORLD
+	)
+
+	// combine b and b to get answer
+	MPI_Gather(
+		&count, 1, MPI_INT,
+		partials, 1, MPI_INT,
+		0, MPI_COMM_WORLD
+	)
+
+	// combine a
+	MPI_Gather(
+		&count, 1, MPI_INT,
+		partials, 1, MPI_INT,
+		0, MPI_COMM_WORLD
+	) 
+	// Perform matrix vector multiplication
+
+
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
