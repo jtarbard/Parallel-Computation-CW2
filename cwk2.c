@@ -62,8 +62,11 @@ int main( int argc, char *argv[] )
 	//
 	// Perform matrix-vector multiplication in parallel.
 	//
-
 	printf("Process %d of %d \n", rank, numprocs);
+
+	MPI_Scatter( A, N<<2, A_perProc, N<<2/numprocs, MPI_FLOAT, 0, MPI_COMM_WORLD );
+
+
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
 	//
