@@ -64,7 +64,7 @@ int main( int argc, char *argv[] )
 	//
 	printf("Process %d of %d \n", rank, numprocs);
 
-	MPI_Scatter( A, N<<2, A_perProc, N<<2/numprocs, MPI_FLOAT, 0, MPI_COMM_WORLD );
+	MPI_Scatter( A, rowsPerProc, MPI_FLOAT, A_perProc, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
 
 	//
