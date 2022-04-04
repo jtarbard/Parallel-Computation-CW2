@@ -70,6 +70,9 @@ int main( int argc, char *argv[] )
 	MPI_Bcast( x, 1, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
 
+
+	MPI_Gather( &b_perProc, rowsPerProc, MPI_FLOAT, b, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
+
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
 	//
