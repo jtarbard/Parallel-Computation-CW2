@@ -69,7 +69,13 @@ int main( int argc, char *argv[] )
 	MPI_Scatter( b, rowsPerProc, MPI_FLOAT, b_perProc, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 	MPI_Bcast( x, 1, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
-
+	int row, col;
+	for (row=0; row<rowsPerProc; row++ )
+	{
+		b_perProc[row] = 0.0f;
+		for( col=0; col<rowsPerProc; col++ )
+			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
+	}
 
 	MPI_Gather( &b_perProc, rowsPerProc, MPI_FLOAT, b, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
