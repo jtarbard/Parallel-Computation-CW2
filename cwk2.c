@@ -62,22 +62,24 @@ int main( int argc, char *argv[] )
 	//
 	// Perform matrix-vector multiplication in parallel.
 	//
-	printf("Process %d of %d \n", rank, numprocs);
-
 
 	MPI_Scatter( A, rowsPerProc, MPI_FLOAT, A_perProc, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 	MPI_Scatter( b, rowsPerProc, MPI_FLOAT, b_perProc, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
-	MPI_Bcast( x, 1, MPI_FLOAT, 0, MPI_COMM_WORLD );
+	MPI_Bcast( x, N, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
-	int row, col;
-	for (row=0; row<rowsPerProc; row++ )
-	{
+	printf("Process %d of %d \n", rank, numprocs);
+	
+	int row, col ;
+	for ( row=0; row<rowsPerProc; row++ ) {
 		b_perProc[row] = 0.0f;
-		for( col=0; col<rowsPerProc; col++ )
-			b_perProc[row] += A_perProc[row*rowsPerProc+col] * x[col];
-	}
+		for ( col=0; col<rowsPerProc; col++ )
+			if(rank==0)
+				printf("[%f][%f] = [%f] \n", A_perProc[col], x[col], A_perProc[col] * x[col]);
+			b_perProc[row] += A_perProc[col] * x[col] ;
+	} 
 
-	MPI_Gather( &b_perProc, rowsPerProc, MPI_FLOAT, b, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
+
+	MPI_Gather( b_perProc, rowsPerProc, MPI_FLOAT, b, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
