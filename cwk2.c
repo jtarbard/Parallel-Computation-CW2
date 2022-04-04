@@ -64,8 +64,6 @@ int main( int argc, char *argv[] )
 	//
 
 	printf("Process %d of %d \n", rank, numprocs);
-
-
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
 	//
