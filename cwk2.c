@@ -63,7 +63,21 @@ int main( int argc, char *argv[] )
 	// Perform matrix-vector multiplication in parallel.
 	//
 
-	// Your solution should go here.
+	MPI_Scatter( b, rowsPerProc, MPI_FLOAT, b_perProc, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
+	MPI_Scatter( A, rowsPerProc*N, MPI_FLOAT, A_perProc, rowsPerProc*N, MPI_FLOAT, 0, MPI_COMM_WORLD );
+	MPI_Bcast( x, N, MPI_FLOAT, 0, MPI_COMM_WORLD );
+
+	int row, col;
+	for( row=0; row<rowsPerProc; row++ )
+	{
+		b_perProc[row] = 0.0f;
+		for( col=0; col<N ; col++ )
+		{
+			b_perProc[row] += A_perProc[row*N+col] * x[col];
+		}
+	}
+
+	MPI_Gather( b_perProc, rowsPerProc, MPI_FLOAT, b, rowsPerProc, MPI_FLOAT, 0, MPI_COMM_WORLD );
 
 	//
 	// Check the answer on rank 0 in serial. Also output the result of the timing.
